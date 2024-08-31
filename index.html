@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Record Filter</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<!--CSS -->
+<style>
+    body {
+        padding: 20px;
+    }
+
+    .filter-container {
+        margin-bottom: 20px;
+    }
+
+    .filter-container select {
+        margin-right: 10px;
+    }
+</style>
+
+<body>
+
+    <div class="container">
+        <h2 class="mb-4">Employee Records</h2>
+
+        <div class="filter-container">
+            <select id="cityFilter" class="form-control d-inline-block" style="width: 150px;"
+                onchange="filterRecords()">
+                <option value="">Filter by City</option>
+            </select>
+
+            <select id="salaryFilter" class="form-control d-inline-block" style="width: 150px;"
+                onchange="filterRecords()">
+                <option value="">Filter by Salary</option>
+            </select>
+
+            <select id="departmentFilter" class="form-control d-inline-block" style="width: 150px;"
+                onchange="filterRecords()">
+                <option value="">Filter by Department</option>
+            </select>
+
+            <select id="designationFilter" class="form-control d-inline-block" style="width: 150px;"
+                onchange="filterRecords()">
+                <option value="">Filter by Designation</option>
+            </select>
+        </div>
+
+        <table class="table table-bordered">
+            <thead class="thead-dark">
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Phone</th>
+                    <th>City</th>
+                    <th>Salary</th>
+                    <th>Designation</th>
+                    <th>Department</th>
+                </tr>
+            </thead>
+            <tbody id="recordTable">
+
+            </tbody>
+        </table>
+
+        <h4>Total Salary: <span id="totalSalary">0</span></h4>
+    </div>
+
+    <!-- Bootstrap js-->
+
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <!-- Javascript -->
+    <script>
+
+
+        let records = [
+            {
+                id: 1, name: "ashish",
+                email: "ashu@gmail.com",
+                phone: "1121212",
+                city: "surat",
+                salary: 20000,
+                degi: "senior",
+                dep: "programming"
+            },
+            {
+                id: 2, name: "hari",
+                email: "hari@gmail.com",
+                phone: "5454545",
+                city: "surat",
+                salary: 22000,
+                degi: "junior",
+                dep: "ui/ux"
+            },
+
+            {
+                id: 3, name: "raj",
+                email: "raj@gmail.com",
+                phone: "454545",
+                city: "vadodara",
+                salary: 25000,
+                degi: "junior",
+                dep: "bde"
+            },
+            {
+                id: 4, name: "deep",
+                email: "deep@gmail.com",
+                phone: "565656",
+                city: "vapi",
+                salary: 30000,
+                degi: "tl",
+                dep: "webdesign"
+            },
+
+            {
+                id: 5, name: "jay",
+                email: "jay@gmail.com",
+                phone: "5565656",
+                city: "rajkot",
+                salary: 20000,
+                degi: "senior",
+                dep: "programming"
+            },
+
+            {
+                id: 6, name: "ajay",
+                email: "ajay@gmail.com",
+                phone: "5565656",
+                city: "vapi",
+                salary: 25000,
+                degi: "manager",
+                dep: "ui/ux"
+            }
+        ];
+
+        window.onload = function () {
+            populateFilters();
+            displayRecords(records);
+        };
+
+        function populateFilters() {
+            let cities = [...new Set(records.map(record => record.city))];
+            let salaries = [...new Set(records.map(record => record.salary))];
+            let departments = [...new Set(records.map(record => record.dep))];
+            let designations = [...new Set(records.map(record => record.degi))];
+
+            populateSelect('cityFilter', cities);
+            populateSelect('salaryFilter', salaries);
+            populateSelect('departmentFilter', departments);
+            populateSelect('designationFilter', designations);
+        }
+
+        function populateSelect(selectId, options) {
+            let select = document.getElementById(selectId);
+            options.forEach(option => {
+                let opt = document.createElement('option');
+                opt.value = option;
+                opt.innerText = option;
+                select.appendChild(opt);
+            });
+        }
+
+        function displayRecords(records) {
+            let tableBody = document.getElementById('recordTable');
+            tableBody.innerHTML = '';
+
+            let totalSalary = 0;
+            records.forEach(record => {
+                let row = `<tr>
+                <td>${record.id}</td>
+                <td>${record.name}</td>
+                <td>${record.email}</td>
+                <td>${record.phone}</td>
+                <td>${record.city}</td>
+                <td>${record.salary}</td>
+                <td>${record.degi}</td>
+                <td>${record.dep}</td>
+            </tr>`;
+                tableBody.innerHTML += row;
+                totalSalary += record.salary;
+            });
+
+            document.getElementById('totalSalary').innerText = totalSalary;
+        }
+
+        function filterRecords() {
+            let city = document.getElementById('cityFilter').value;
+            let salary = document.getElementById('salaryFilter').value;
+            let department = document.getElementById('departmentFilter').value;
+            let designation = document.getElementById('designationFilter').value;
+
+            let filteredRecords = records.filter(record => {
+                return (city === '' || record.city === city) &&
+                    (salary === '' || record.salary == salary) &&
+                    (department === '' || record.dep === department) &&
+                    (designation === '' || record.degi === designation);
+            });
+
+            displayRecords(filteredRecords);
+        }
+
+    </script>
+
+</body>
+
+</html>
